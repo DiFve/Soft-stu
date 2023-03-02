@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div id="maincontainer"></div>
+
+    <script>
+      //get ID
+      let mainContainer = document.getElementById("maincontainer");
+
+      //Exercise 04: JavaScript&DOM
+      let ex4 = document.createElement("h2");
+      ex4.innerHTML = "Exercise 04: JavaScript&DOM";
+      mainContainer.appendChild(ex4);
+
+      //button
+      let divButton = document.createElement("div");
+      let button = document.createElement("button");
+      button.innerHTML = "Click me to display Date and Time";
+      divButton.style.height = "50px";
+      divButton.style.display = "flex";
+      button.style.width = "fit-content";
+      button.style.height = "fit-content";
+      button.style.alignSelf = "center";
+      divButton.appendChild(button);
+      mainContainer.appendChild(divButton);
+
+      let showDate = document.createElement("div");
+      showDate.innerHTML = new Date();
+      showDate.style.border = "3px solid black";
+      showDate.style.width = "fit-content";
+      showDate.style.height = "fit-content";
+      showDate.style.alignSelf = "center";
+      showDate.style.position = "fixed";
+      showDate.style.top = "0";
+      showDate.style.right = "0";
+      showDate.style.display = "none";
+      divButton.appendChild(showDate);
+
+      let colorList = ["red", "green", "blue", "pink", "yellow", "grey"];
+      let backgroundIndex = 0;
+      let textIndex = 2;
+      showDate.style.backgroundColor = colorList[0];
+      let changeColor = () => {
+        backgroundIndex = (backgroundIndex + 1) % colorList.length;
+        textIndex = (textIndex + 1) % colorList.length;
+        showDate.style.backgroundColor = colorList[backgroundIndex];
+        showDate.style.color = colorList[textIndex];
+      };
+
+      let webWorker = null;
+
+      button.onclick = () => {
+        button.style.display = "none";
+        showDate.style.display = "block";
+
+        webWorker = new Worker("worker.js");
+        webWorker.onmessage = (e) => {
+          showDate.innerHTML = e.data;
+          changeColor();
+        };
+      };
+
+      showDate.onclick = () => {
+        if (showDate.style.position == "fixed") {
+          webWorker.terminate();
+          showDate.style.position = "relative";
+        } else {
+          changeColor();
+          showDate.style.position = "fixed";
+          webWorker = new Worker("worker.js");
+          webWorker.onmessage = (e) => {
+            showDate.innerHTML = e.data;
+            changeColor();
+          };
+        }
+      };
+
+      let divPers = document.createElement("div");
+      let psnIf = document.createElement("a");
+      psnIf.innerHTML = "Personal Info";
+
+      psnIf.setAttribute("href", "#");
+      divPers.appendChild(psnIf);
+      mainContainer.appendChild(divPers);
+
+      psnIf.onmouseover = () => {
+        psnIf.style.color = "blue";
+        psnIf.style.backgroundColor = "yellow";
+      };
+
+      psnIf.onmouseout = () => {
+        psnIf.style.color = "hotpink";
+        psnIf.style.backgroundColor = "white";
+      };
+
+      let divMyInfo = document.createElement("div");
+      let unOrder = document.createElement("ul");
+      let name = document.createElement("li");
+      name.innerHTML = "Manhermak Praditpong ID: 63010789";
+      unOrder.appendChild(name);
+      let subject = document.createElement("li");
+      subject.innerHTML = "Subject:Software Studio";
+      unOrder.appendChild(subject);
+      let semester = document.createElement("li");
+      semester.innerHTML = "Semester:2";
+      unOrder.appendChild(semester);
+      divMyInfo.hidden = true;
+      divMyInfo.appendChild(unOrder);
+      mainContainer.appendChild(divMyInfo);
+
+      psnIf.onclick = () => {
+        divMyInfo.hidden = !divMyInfo.hidden;
+      };
+
+      let h1 = document.createElement("h1");
+      h1.innerHTML = "Snapshots";
+      mainContainer.appendChild(h1);
+
+      let imageList = [
+        [
+          "Fireworks",
+          "https://ww2.kqed.org/app/uploads/sites/10/2021/06/RS56997_GettyImages-1233808622-qut.jpg",
+        ],
+        [
+          "Crest",
+          "https://www.creativefabrica.com/wp-content/uploads/2020/05/22/Royal-Crest-Coat-of-Arms-Graphics-4182626-1.png",
+        ],
+        [
+          "Action",
+          "https://satishrao.in/wp-content/uploads/2014/11/action.jpg",
+        ],
+        [
+          "Buffalo",
+          "https://cdn-acgla.nitrocdn.com/bvIhcJyiWKFqlMsfAAXRLitDZjWdRlLX/assets/static/optimized/rev-5131b73/wp-content/uploads/2020/07/A-Water-Buffalo.jpg",
+        ],
+      ];
+
+      let snUL = document.createElement("ul");
+      mainContainer.appendChild(snUL);
+
+      let img = document.createElement("img");
+      img.setAttribute(
+        "src",
+        "https://upload.wikimedia.org/wikipedia/commons/3/35/KMITL_PCC.png"
+      );
+      mainContainer.appendChild(img);
+
+      for (let i = 0; i < imageList.length; i += 1) {
+        let imageItem = document.createElement("li");
+        snUL.appendChild(imageItem);
+
+        let link = document.createElement("a");
+        link.innerHTML = imageList[i][0];
+        link.href = "#";
+        link.onclick = () => {
+          img.src = imageList[i][1];
+        };
+        imageItem.appendChild(link);
+      }
+    </script>
+  </body>
+</html>
